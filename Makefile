@@ -25,3 +25,11 @@ push-% : build-%  ## Push image
 	@echo "+ $@"
 	docker push $(REPO)/$*
 .PHONY: push-%
+
+build :  ## Build all
+	@echo "+ $@"
+	find ./ -type f -name "Dockerfile" | xargs -l1 dirname | xargs -l1 basename | xargs -I{} make build-{}
+
+push :  ## Build and push all
+	@echo "+ $@"
+	find ./ -type f -name "Dockerfile" | xargs -l1 dirname | xargs -l1 basename | xargs -I{} make push-{}
