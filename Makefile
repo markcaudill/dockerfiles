@@ -20,22 +20,24 @@ $(BUILDS_DIR) :
 
 $(BUILDS_DIR)/% : %/Dockerfile | $(BUILDS_DIR)  ## Build an image
 	@echo "+ $@"
-	tag=$(REPO)/$(shell dirname $< | sed 's/\//:/g')
+	image=$(word 2,$(subst /, ,$@))
+	tag=$(word 3,$(subst /, ,$@))
 	@echo "++ lint"
 	$(DOCKER) run --rm -i hadolint/hadolint < $<
 	@echo "++ build"
-	$(DOCKER) build -t $$tag $(<D)
+	$(DOCKER) build -t $(REPO)/$$image:$$tag $(<D)
 	@echo "++ save id"
 	mkdir -p $(@D)
-	$(DOCKER) inspect --format='{{.Id}}' $$tag | tee $@
+	$(DOCKER) inspect --format='{{.Id}}' $(REPO)/$$image:$$tag | tee $@
 
 build-all : $(addprefix $(BUILDS_DIR)/,$(BUILDS))  ## Build all images
 	@echo "+ $@"
 
 push/% : $(BUILDS_DIR)/%  ## Push an image
 	@echo "+ $@"
-	tag=$(REPO)/$(shell dirname $< | sed 's/\//:/g')
-	$(DOCKER) push $$tag
+	image=$(word 2,$(subst /, ,$@))
+	tag=$(word 3,$(subst /, ,$@))
+	$(DOCKER) push $(REPO)/$$image:$$tag
 .PHONY: push/%
 
 push-all : $(addprefix push/,$(BUILDS))  ## Push all images
