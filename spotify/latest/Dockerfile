@@ -3,7 +3,7 @@ FROM debian:buster-slim
 LABEL maintainer="Mark Caudill <mark@mrkc.me>"
 
 ENV USERNAME spotify
-ENV HOME /home/spotify
+ENV HOME /home/$USERNAME
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apt-get update && apt-get -y install ca-certificates=* curl=* gnupg=* --no-install-recommends \
@@ -20,11 +20,11 @@ RUN apt-get update && apt-get -y install ca-certificates=* curl=* gnupg=* --no-i
 		xdg-utils=* \
 		--no-install-recommends \
 	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/*
-
-RUN useradd --create-home --home-dir $HOME $USERNAME \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& useradd --create-home --home-dir $HOME $USERNAME \
 	&& gpasswd -a $USERNAME audio \
 	&& chown -R $USERNAME:$USERNAME $HOME
+
 
 WORKDIR $HOME
 USER $USERNAME
