@@ -2,11 +2,12 @@ FROM debian:buster-slim
 
 LABEL maintainer="Mark Caudill <mark@mrkc.me>"
 
+ENV USERNAME spotify
+ENV HOME /home/spotify
+
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apt-get update && apt-get -y install ca-certificates=* curl=* gnupg=* --no-install-recommends \
-	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/*
-RUN curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | apt-key add - \
+	&& curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | apt-key add - \
 	&& echo "deb http://repository.spotify.com stable non-free" | tee /etc/apt/sources.list.d/spotify.list \
 	&& apt-get update \
 	&& apt-get -y install \
@@ -21,13 +22,12 @@ RUN curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | apt-key a
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV HOME /home/spotify
-RUN useradd --create-home --home-dir $HOME spotify \
-	&& gpasswd -a spotify audio \
-	&& chown -R spotify:spotify $HOME
+RUN useradd --create-home --home-dir $HOME $USERNAME \
+	&& gpasswd -a $USERNAME audio \
+	&& chown -R $USERNAME:$USERNAME $HOME
 
 WORKDIR $HOME
-USER spotify
+USER $USERNAME
 
 ENTRYPOINT ["spotify"]
 
