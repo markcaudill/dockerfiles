@@ -5,4 +5,4 @@ ENV UUID="" \
 	RU_OPTS="" \
 	HTTPIE_CMD="https" \
 	HTTPIE_OPTS=""
-CMD ["sh", "-x", "-c", "runitor -uuid $UUID $RU_OPTS -- $HTTPIR_CMD $HTTPIE_OPTS"]
+CMD ["sh", "-x", "-c", "runitor -uuid $UUID $RU_OPTS -- $HTTPIE_CMD $HTTPIE_OPTS"]
