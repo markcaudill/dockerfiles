@@ -4,45 +4,84 @@ SHELL := bash
 .DELETE_ON_ERROR:
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
+MAKEFLAGS += --jobs=$(shell nproc)
+MAKEFLAGS += --load-average=$(shell nproc)
 
-BUILDS_DIR = builds
-BUILDS := $(shell dirname */*/Dockerfile)
+# Directories for Make state
+IMAGE_DIR = image
+LINT_DIR = lint
+PUSH_DIR = push
+STATE_DIRS = $(IMAGE_DIR) $(LINT_DIR) $(PUSH_DIR)
+
+IMAGES := $(shell dirname */*/Dockerfile)
+
+# Commands
 DOCKER = docker
+LINT = $(DOCKER) run --rm -i hadolint/hadolint <
+HASH = sha256sum
+
 REPO = markcaudill
+MKDIR = mkdir -p
+
 
 help :  ## This message
+	@echo IMAGE_DIR = $(IMAGE_DIR)
+	@echo LINT_DIR = $(LINT_DIR)
+	@echo PUSH_DIR = $(PUSH_DIR)
+	@echo REPO = $(REPO)
+	@echo IMAGES =
+	for i in $(IMAGES); do
+		@echo "    $$i"
+	done
+	@echo
 	@grep -E '^[^>]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@echo
+	@echo "Dockerfiles are expected to be in a directory structured like"
+	@echo "./<image>/<tag>/Dockerfile"
 .PHONY: help
 
-$(BUILDS_DIR) :
-	@echo "+ $@"
-	mkdir -p $@
 
-$(BUILDS_DIR)/% : %/Dockerfile | $(BUILDS_DIR)  ## Build an image
+$(STATE_DIRS) :
 	@echo "+ $@"
-	image=$(word 2,$(subst /, ,$@))
-	tag=$(word 3,$(subst /, ,$@))
-	@echo "++ lint"
-	$(DOCKER) run --rm -i hadolint/hadolint < $<
-	@echo "++ build"
-	$(DOCKER) build -t $(REPO)/$$image:$$tag $(<D)
-	@echo "++ save id"
-	mkdir -p $(@D)
-	$(DOCKER) inspect --format='{{.Id}}' $(REPO)/$$image:$$tag | tee $@
+	$(MKDIR) $@
 
-build-all : $(addprefix $(BUILDS_DIR)/,$(BUILDS))  ## Build all images
+
+$(IMAGE_DIR)/% : %/Dockerfile $(LINT_DIR)/% | $(IMAGE_DIR)  ## Build an image
+	@echo "+ $@"
+	$(DOCKER) build -t $(REPO)/$(word 2,$(subst /, ,$@)):$(word 3,$(subst /, ,$@)) $(<D)
+	$(MKDIR) $(@D)
+	$(HASH) $< > $@
+
+$(LINT_DIR)/% : %/Dockerfile | $(LINT_DIR)  ## Lint an Dockerfile (e.g. $(LINT_DIR)/htop/latest)
+	@echo "+ $@"
+	$(LINT) $<
+	$(MKDIR) $(@D)
+	$(HASH) $< > $@
+
+$(PUSH_DIR)/% : $(IMAGE_DIR)/% | $(PUSH_DIR)  ## Push an image
+	@echo "+ $@"
+	$(DOCKER) push $(REPO)/$(word 2,$(subst /, ,$@)):$(word 3,$(subst /, ,$@))
+	$(HASH) $< > $@
+
+
+image-all : $(addprefix $(IMAGE_DIR)/,$(IMAGES))  ## Build all images
 	@echo "+ $@"
 
-push/% : $(BUILDS_DIR)/%  ## Push an image
+lint-all : $(addprefix $(LINT_DIR)/,$(IMAGES))  ## Lint all Dockerfile
 	@echo "+ $@"
-	image=$(word 2,$(subst /, ,$@))
-	tag=$(word 3,$(subst /, ,$@))
-	$(DOCKER) push $(REPO)/$$image:$$tag
-.PHONY: push/%
 
-push-all : $(addprefix push/,$(BUILDS))  ## Push all images
+push-all : $(addprefix $(PUSH_DIR)/,$(IMAGES))  ## Push all images
 	@echo "+ $@"
 	@echo $*
 
 clean :
-	rm -rf $(BUILDS_DIR)
+	rm -rf $(STATE_DIRS)
+
+
+.gitignore :
+	@echo "+ $@"
+	curl -Ls https://www.toptal.com/developers/gitignore/api/vim >> $@
+	for i in $(STATE_DIRS); do
+		@echo $$i >> $@
+	done
+.PHONY: .gitignore
