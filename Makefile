@@ -61,6 +61,7 @@ $(LINT_DIR)/% : %/Dockerfile | $(LINT_DIR)  ## Lint an Dockerfile (e.g. $(LINT_D
 $(PUSH_DIR)/% : $(IMAGE_DIR)/% | $(PUSH_DIR)  ## Push an image
 	@echo "+ $@"
 	$(DOCKER) push $(REPO)/$(word 2,$(subst /, ,$@)):$(word 3,$(subst /, ,$@))
+	$(MKDIR) $(@D)
 	$(HASH) $< > $@
 
 
