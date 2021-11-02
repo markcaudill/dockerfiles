@@ -1,14 +1,8 @@
 FROM golang:1-buster AS builder
-ENV RUNITOR_VERSION 0.7.2
-ENV RUNITOR_GIT_TAG v$RUNITOR_VERSION
-RUN apt-get update && apt-get install -y --no-install-recommends bash=5.* git=1:2.*
-WORKDIR /tmp
-RUN git clone --depth 1 --branch $RUNITOR_GIT_TAG https://github.com/bdd/runitor.git
-WORKDIR /tmp/runitor
-RUN go build -o ./ ./cmd/runitor
-
+ARG RUNITOR_VERSION=v0.8.0
+RUN go install bdd.fi/x/runitor/cmd/runitor@${RUNITOR_VERSION:-latest}
 
 FROM debian:buster
 LABEL maintainer="Mark Caudill <mark@mrkc.me>"
-COPY --from=builder /tmp/runitor/runitor /usr/local/bin/runitor
+COPY --from=builder /go/bin/runitor /usr/local/bin
 CMD ["runitor"]
