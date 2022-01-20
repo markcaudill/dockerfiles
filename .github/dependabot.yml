@@ -1,11 +1,71 @@
 version: 2
 updates:
-  - package-ecosystem: "gomod"
-    directory: "/"
+  - package-ecosystem: "docker"
+    directory: "bitlbee/3.6"
     schedule:
       interval: "daily"
 
   - package-ecosystem: "docker"
-    directory: "/"
+    directory: "duplicity/latest"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    directory: "duplicity/runitor"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    directory: "htop/latest"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    directory: "httpie/latest"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    directory: "httpie/runitor"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    directory: "runitor/alpine"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    directory: "runitor/debian"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    directory: "runitor/latest"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    directory: "sieve/2"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    directory: "spotify/latest"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    directory: "twitter-pruner/latest"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    directory: "twitter-pruner/runitor"
+    schedule:
+      interval: "daily"
+
+  - package-ecosystem: "docker"
+    directory: "xterm/latest"
     schedule:
       interval: "daily"
