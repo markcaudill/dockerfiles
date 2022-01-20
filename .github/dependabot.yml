@@ -41,11 +41,6 @@ updates:
       interval: "daily"
 
   - package-ecosystem: "docker"
-    directory: "runitor/latest"
-    schedule:
-      interval: "daily"
-
-  - package-ecosystem: "docker"
     directory: "sieve/2"
     schedule:
       interval: "daily"
