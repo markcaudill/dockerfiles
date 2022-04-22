@@ -61,6 +61,6 @@ ENV PATH="/home/nzbget/nzbget:${PATH}"
 EXPOSE 6789
 
 RUN mkdir -p ~/downloads
-VOLUME ["~/downloads"]
+VOLUME ["/home/nzbget/downloads"]
 
 CMD ["bash", "-x", "-c", "nzbget -s -n ${NZBGET_OPTS} ${NZBGET_SERVER_OPTS}"]
