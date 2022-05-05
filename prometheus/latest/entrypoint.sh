@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 test -n "${PROMETHEUS_YML}" \
     && echo "${PROMETHEUS_YML}" > /etc/prometheus/prometheus.yml
