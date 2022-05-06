@@ -10,5 +10,6 @@ USER nobody
 EXPOSE 9090
 VOLUME /prometheus
 WORKDIR /prometheus
+ENV PROMETHEUS_RULES_YML ""
 ENV PROMETHEUS_YML ""
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

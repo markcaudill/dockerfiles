@@ -3,6 +3,9 @@
 test -n "${PROMETHEUS_YML}" \
     && echo "${PROMETHEUS_YML}" > /etc/prometheus/prometheus.yml
 
+test -n "${PROMETHEUS_RULES_YML}" \
+    && echo "${PROMETHEUS_RULES_YML}" > /etc/prometheus/prometheus-rules.yml
+
 /bin/prometheus \
     --config.file=/etc/prometheus/prometheus.yml \
     --storage.tsdb.path=/prometheus \
