@@ -11,4 +11,6 @@ EXPOSE 9093
 VOLUME /alertmanager
 WORKDIR /alertmanager
 ENV ALERTMANAGER_YML ""
+ENV ALERTMANAGER_COMMAND "/bin/alertmanager"
+ENV ALERTMANAGER_COMMAND_ARGS "--config.file=/etc/alertmanager/alertmanager.yml --storage.path=/alertmanager"
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

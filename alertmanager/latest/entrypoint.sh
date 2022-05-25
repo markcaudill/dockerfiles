@@ -3,6 +3,4 @@
 test -n "${ALERTMANAGER_YML}" \
     && echo "${ALERTMANAGER_YML}" > /etc/alertmanager/alertmanager.yml
 
-/bin/alertmanager \
-    --config.file=/etc/alertmanager/alertmanager.yml \
-    --storage.path=/alertmanager
+"${ALERTMANAGER_COMMAND}" "${ALERTMANAGER_COMMAND_ARGS}"
