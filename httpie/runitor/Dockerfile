@@ -1,6 +1,6 @@
 FROM markcaudill/runitor:alpine AS runitor
 LABEL maintainer="Mark Caudill <mark@mrkc.me>"
-RUN apk --no-cache add httpie=~2
+RUN apk --no-cache add httpie=~3
 ENV UUID="" \
 	RU_OPTS="" \
 	HTTPIE_CMD="https" \
