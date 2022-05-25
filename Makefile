@@ -46,13 +46,13 @@ $(STATE_DIRS) :
 	$(MKDIR) $@
 
 
-$(IMAGE_DIR)/% : %/Dockerfile $(LINT_DIR)/% | $(IMAGE_DIR)  ## Build an image
+$(IMAGE_DIR)/% : %/Dockerfile $(LINT_DIR)/% $(PUSH_DIR)/runitor/alpine | $(IMAGE_DIR)  ## Build an image
 	@echo "+ $@"
 	$(DOCKER) build -t $(REPO)/$(word 2,$(subst /, ,$@)):$(word 3,$(subst /, ,$@)) $(<D)
 	$(MKDIR) $(@D)
 	$(HASH) $< > $@
 
-$(LINT_DIR)/% : %/Dockerfile | $(LINT_DIR)  ## Lint an Dockerfile (e.g. $(LINT_DIR)/htop/latest)
+$(LINT_DIR)/% : %/Dockerfile | $(LINT_DIR)  ## Lint a Dockerfile (e.g. $(LINT_DIR)/htop/latest)
 	@echo "+ $@"
 	$(LINT) $<
 	$(MKDIR) $(@D)
@@ -67,9 +67,11 @@ $(PUSH_DIR)/% : $(IMAGE_DIR)/% | $(PUSH_DIR)  ## Push an image
 
 image-all : $(addprefix $(IMAGE_DIR)/,$(IMAGES))  ## Build all images
 	@echo "+ $@"
+	@echo $*
 
-lint-all : $(addprefix $(LINT_DIR)/,$(IMAGES))  ## Lint all Dockerfile
+lint-all : $(addprefix $(LINT_DIR)/,$(IMAGES))  ## Lint all Dockerfiles
 	@echo "+ $@"
+	@echo $*
 
 push-all : $(addprefix $(PUSH_DIR)/,$(IMAGES))  ## Push all images
 	@echo "+ $@"
