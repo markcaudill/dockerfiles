@@ -1,9 +1,7 @@
-FROM alpine:3 AS builder
+FROM golang:1-alpine AS builder
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:$PATH
-RUN mkdir -p $GOPATH \
-	&& apk add --no-cache git=~2 go=~1 \
-	&& go get github.com/crueber/twitter-pruner
+RUN go install github.com/crueber/twitter-pruner@latest
 
 FROM markcaudill/runitor:alpine AS runitor
 LABEL maintainer="Mark Caudill <mark@mrkc.me>"

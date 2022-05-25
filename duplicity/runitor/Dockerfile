@@ -5,7 +5,7 @@ RUN apk --no-cache add \
 	duplicity=~0 \
 	gnupg=~2 \
 	librsync-dev=~2 \
-	openssh-client=~8 \
+	openssh-client=~9 \
 	py3-paramiko=~2
 ENV SSH_PRIVATE_KEY="" \
 	SSH_PRIVATE_KEY_FILENAME="" \

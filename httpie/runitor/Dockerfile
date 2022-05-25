@@ -1,4 +1,4 @@
-FROM markcaudill/runitor:alpine AS runitor
+FROM markcaudill/runitor:alpine
 LABEL maintainer="Mark Caudill <mark@mrkc.me>"
 RUN apk --no-cache add httpie=~3
 ENV UUID="" \
