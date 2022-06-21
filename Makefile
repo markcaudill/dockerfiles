@@ -46,7 +46,7 @@ $(STATE_DIRS) :
 	$(MKDIR) $@
 
 
-$(IMAGE_DIR)/% : %/Dockerfile $(LINT_DIR)/% $(PUSH_DIR)/runitor/alpine | $(IMAGE_DIR)  ## Build an image
+$(IMAGE_DIR)/% : %/Dockerfile $(LINT_DIR)/% | $(IMAGE_DIR)  ## Build an image
 	@echo "+ $@"
 	$(DOCKER) build -t $(REPO)/$(word 2,$(subst /, ,$@)):$(word 3,$(subst /, ,$@)) $(<D)
 	$(MKDIR) $(@D)
