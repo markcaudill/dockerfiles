@@ -1,6 +1,6 @@
 FROM golang:1-alpine AS builder
 ARG RUNITOR_VERSION
-RUN go install bdd.fi/x/runitor/cmd/runitor@latest
+RUN go install bdd.fi/x/runitor/cmd/runitor@${RUNITOR_VERSION:-latest}
 
 
 FROM alpine:3
