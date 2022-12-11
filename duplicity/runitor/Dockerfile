@@ -1,8 +1,8 @@
-FROM markcaudill/runitor:alpine AS runitor
+FROM markcaudill/runitor:latest-alpine AS runitor
 LABEL maintainer="Mark Caudill <mark@mrkc.me>"
 RUN apk --no-cache add \
 	bash=~5 \
-	duplicity=~0 \
+	duplicity=~1 \
 	gnupg=~2 \
 	librsync-dev=~2 \
 	openssh-client=~9 \
